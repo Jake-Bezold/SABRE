@@ -1,9 +1,24 @@
 {
-  "name": "socket-chat-example",
+  "name": "socketiotestchat",
   "version": "0.0.1",
   "description": "my first socket.io app",
   "dependencies": {
     "express": "^4.15.2",
     "socket.io": "^2.0.4"
-  }
+  },
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "test",
+    "heroku"
+  ],
+  "author": "Jake Bezold",
+    "license": "ISC"
+    
+    "engines": {
+	"node": "9.6.0"
+    }
 }
