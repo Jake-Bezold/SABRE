@@ -12,5 +12,9 @@
   "author": "Jake",
   "license": "ISC",
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://git.heroku.com/sheltered-cove-46264.git"
+  }
 }
