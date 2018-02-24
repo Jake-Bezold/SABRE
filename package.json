@@ -18,7 +18,4 @@
   "author": "Jake Bezold",
     "license": "ISC"
     
-    "engines": {
-	"node": "9.6.0"
-    }
 }
