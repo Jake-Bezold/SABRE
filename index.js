@@ -2,6 +2,8 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+var player_names = [];
+
 app.get('/', function(req, res){
 res.sendFile(__dirname + '/index.html');
 });
@@ -18,14 +20,17 @@ io.on('connection', function(game){
       io.emit('chat message', msg);
       //sends message to conosole
       console.log('message: ' + msg);
-    })
-    //on disconnect
-    game.on('disconnect', function(){
-      //sends disconnect message tp page
+    });
+    socket.on('ready',function(name){
+	console.log(name);
+	//player_names.append(name);
+	//console.log(player_names);
+    });
+    socket.on('disconnect', function(){
       io.emit('chat message', 'a user has disconnected')
       //sends disconnect message to console
       console.log('user disconnected');
-    })
+    });
 });
 //listens on the port heroku sets or 3000
 http.listen((process.env.PORT||3000), function(){

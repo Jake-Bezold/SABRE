@@ -23,12 +23,16 @@
     $('#m').val('');
     return false;
   });
+  function send_ready(name) {
+    socket.emit('ready', name);
+  }
   socket.on('chat message', function(msg){
     $('#messages').append($('<li>').text(msg));
   });
 });
 </script>
   <body>
+    <button id="ready_test" onClick="send_ready(this.id)">Ready!</button>
     <ul id="messages"></ul>
     <form action="">
       <input id="m" autocomplete="off" /><button>Send</button>
