@@ -9,13 +9,13 @@ res.sendFile(__dirname + '/index.html');
 });
 
 
-io.on('connection', function(game){
+io.on('connection', function(socket){
     //sends "user connected" to page
     io.emit('chat message', 'a user has connected')
     //sends "user connected" to console
     console.log('a user connected');
     //when a message is sent
-    game.on('chat message',function(msg){
+    socket.on('chat message',function(msg){
       //sends message to page
       io.emit('chat message', msg);
       //sends message to conosole
