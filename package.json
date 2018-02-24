@@ -1,13 +1,16 @@
 {
-  "name": "socketiotestchat",
-  "version": "1.0.0",
-  "description": "",
-  "main": "(index.html)",
-  "dependencies": {},
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "name": "herokutest",
+  "version": "0.3.0",
+  "description": "heroku test",
+  "engines": {
+    "node": "8.9.1"
   },
-  "author": "Jake Bezold",
-  "license": "ISC"
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Jake",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {}
 }
