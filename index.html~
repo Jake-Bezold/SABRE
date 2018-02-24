@@ -16,9 +16,6 @@
   <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
-    function send_ready(name) {
-	socket.emit('ready', name);
-    }
     $(function () {
     var socket = io();
     $('form').submit(function(){
@@ -26,6 +23,9 @@
     $('#m').val('');
     return false;
   });
+  function send_ready(name) {
+    socket.emit('ready', name);
+  }
   socket.on('chat message', function(msg){
     $('#messages').append($('<li>').text(msg));
   });
