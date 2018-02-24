@@ -6,19 +6,28 @@ app.get('/', function(req, res){
 res.sendFile(__dirname + '/index.html');
 });
 
-io.on('connection', function(socket){
+
+io.on('connection', function(game){
+    //sends "user connected" to page
     io.emit('chat message', 'a user has connected')
+    //sends "user connected" to console
     console.log('a user connected');
-    socket.on('chat message',function(msg){
+    //when a message is sent
+    game.on('chat message',function(msg){
+      //sends message to page
       io.emit('chat message', msg);
+      //sends message to conosole
       console.log('message: ' + msg);
     })
-    socket.on('disconnect', function(){
+    //on disconnect
+    game.on('disconnect', function(){
+      //sends disconnect message tp page
       io.emit('chat message', 'a user has disconnected')
+      //sends disconnect message to console
       console.log('user disconnected');
     })
 });
-
+//listens on the port heroku sets or 3000
 http.listen((process.env.PORT||3000), function(){
   console.log('listening on *:3000');
 });
