@@ -16,8 +16,9 @@ io.on('connection', function(socket){
       console.log('message: ' + msg);
     });
     socket.on('ready',function(name){
-	player_names.append(name);
-	console.log(player_names);
+	console.log(name);
+	//player_names.append(name);
+	//console.log(player_names);
     });
     socket.on('disconnect', function(){
       io.emit('chat message', 'a user has disconnected')
