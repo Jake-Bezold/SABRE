@@ -73,7 +73,7 @@ function originIsAllowed(origin) {
    var objectsJSON = JSON.stringify(objects);
    console.log("Sending broadcast to " + clients.length + " clients.");
    clients.forEach(function(client) {
-     if (client !== wsServer && client.readyState === WebSocket.OPEN) {
+     if (client !== wsServer/* && client.readyState === WebSocket.OPEN*/) {
         console.log("Sent update");
         client.send(objectsJSON);
       }
