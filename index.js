@@ -111,7 +111,9 @@ request.origin + ' rejected.');
 
          console.log(">>>> " + message.utf8Data);
 
-         console.log(">>>>>>>> " + JSON.parse(message.utf8Data))
+         var data = JSON.parse(message.utf8Data)
+
+         console.log(data)
 
          //console.log(">>>> " + message.keys())
            //console.log('Received Message2: ' + message);
