@@ -71,9 +71,10 @@ function originIsAllowed(origin) {
 //sends the updates of every tick to the client as a json file
  function sendUpdates(){
    var objectsJSON = JSON.stringify(objects);
+   console.log("Sending broadcast to " + clients.length + " clients.");
    clients.forEach(function(client) {
      console.log("Sent update");
-     client.send(objectsJSON);
+     client.sendUTF(objectsJSON);
    });
   }
 wsServer.on('request', function(request) {
