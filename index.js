@@ -109,7 +109,7 @@ request.origin + ' rejected.');
        if (message.type === 'utf8') {
            //console.log('Received Message2: ' + message);
            //console.log('type of: ' + typeof(message));
-           var data = JSON.parse(message);
+           var data = JSON.parse(message.substring(5));
            console.log(data)
            //var data = JSON.parse(buffer.toString('utf8'));
            //player_names[playerNum] = data.userName;
