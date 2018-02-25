@@ -10,16 +10,22 @@ var player_pos_game = [];
 var scaleLatm = .0000139479;
 var scaleLongm = .00000899;
 var scaleMU = 2.5;
+var unit_id = 1;
 
 //////////////
-objects.push(['player 1', 0.0, 0.0, 20, .5, 1, 2, 2.0, 1]);
-objects.push(['player 2', 4.0, 4.0, 20, .5, 1, 2, 2.0, 2]);
+objects.push(['unit 1', 0.0, 0.0, 20, .5, 1, 2, 2.0, 1]);
+unit_id++;
+objects.push(['unit 2', 4.0, 4.0, 20, .5, 1, 2, 2.0, 2]);
+unit_id++;
 commands.push(["move", 0, 10, [0,0], [4,4], true]);
 commands.push([null]);
-for (testiter = 0; testiter <= 20; testiter++){
+for (ti = 0; ti <= 20; ti++){
   var objectsJSON = JSON.stringify(objects);
-  console.log(testiter + ": " + objectsJSON);
-  console.log("commands: " + commands);
+  //for (var object in objects) {
+    console.log("[" + ti + "]" + objects + "/n");
+    //console.log(ti + ": " + object[0] + ", X:" + object[1] + ", Y:" + object[2] + ", #Units: " + object[3] + ", MoveSpeed: " + object[4] + ", Defense: " + object[5] + ", Attack: " + object[6] + "\n");
+  //}
+  //console.log("commands: " + commands);
   tick();
 }
 
@@ -99,8 +105,9 @@ request.origin + ' rejected.');
 
 
    connection.on('message', function(message) {
+     console.log('recieved Message: ' + message)
        if (message.type === 'utf8') {
-           console.log('Received Message: ' + message);
+           console.log('Received Message2: ' + message);
            //console.log('type of: ' + typeof(message));
            //var data = JSON.parse(message);
            //var data = JSON.parse(buffer.toString('utf8'));
@@ -198,7 +205,7 @@ message.binaryData.length + ' bytes');
    function move(cmd){
      var cur_obj;
      cur_obj = objects[cmd[1]];
-     console.log("cmd[2]: " + cmd[2] + ", objects[cmd[1]][2]: " + objects[cmd[1]][3] + ", first?: " + cmd[5]);
+     //console.log("cmd[2]: " + cmd[2] + ", objects[cmd[1]][2]: " + objects[cmd[1]][3] + ", first?: " + cmd[5]);
      if (cmd[5] == true && cmd[2] == objects[cmd[1]][3]){
        commands[cmd[1]][5] = false;
      }
@@ -210,6 +217,10 @@ message.binaryData.length + ' bytes');
        objects[objects.length-1][3] = cmd[2];
 
        objects[cmd[1]][3] -= cmd[2];
+
+       objects[objects.length-1][0] = "unit " + unit_id;
+
+       unit_id++;
 
        cur_obj = objects[objects.length-1];
 
@@ -225,8 +236,7 @@ message.binaryData.length + ' bytes');
 
        //console.log(commands);
      }
-
-     console.log("Moving obj id: " + cur_obj[0]);
+     console.log("Move event for unit id:" + cur_obj[1]);
      var xi = cur_obj[1];
      var yi = cur_obj[2];
      var xf = cmd[4][0];
@@ -269,7 +279,7 @@ message.binaryData.length + ' bytes');
      for(i=0; i < objects.length; i++) {
        if((objects[i][1] - xi <= dist) && (objects[i][2] - yi <= dist)) {
          if(objects[i][8] != cur_obj[8] && i != objects.indexOf(cur_obj)) {
-           console.log("Starting battle with objects: " + objects.indexOf(cur_obj) + ", " + i);
+           console.log("Starting battle with objects id:" + objects.indexOf(cur_obj) + " and id:" + i);
            commands[objects.indexOf(cur_obj)] = ["battle", objects.indexOf(cur_obj), i];
            commands[i] = ["idle"];
 
@@ -291,9 +301,11 @@ message.binaryData.length + ' bytes');
      if (objects[cmd[2]][3] <= 0){
        commands.splice(cmd[2] , 1);
        objects.splice(cmd[2], 1);
+       console.log("Unit id:" + cmd[2] + " has been slain.")
      }
      else if (objects[cmd[1]][3] <= 0){
        commands.splice(cmd[1], 1);
        objects.splice(cmd[1], 1);
+       console.log("Unit id:" + cmd[1] + " has been slain.")
      }
    }
