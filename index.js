@@ -103,7 +103,7 @@ request.origin + ' rejected.');
            console.log('Received Message: ' + message.utf8Data);
            console.log('Message Type: ' + typeof(message));
            connection.sendUTF(message.utf8Data);
-           var data = JSON.parse(message);
+           var data = JSON.parse(String(message));
            player_names[playerNum] = data['userName'];
            console.log("userName: " + player_names[playerNum])
            gameStart();
