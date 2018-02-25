@@ -113,7 +113,9 @@ request.origin + ' rejected.');
 
          var data = JSON.parse(message.utf8Data)
 
-         console.log(data)
+         console.log("LAT> " + data.latitude)
+         console.log("LON> " + data.longitude)
+         console.log("USER> " + data.userName)
 
          //console.log(">>>> " + message.keys())
            //console.log('Received Message2: ' + message);
