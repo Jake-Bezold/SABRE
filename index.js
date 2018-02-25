@@ -73,8 +73,10 @@ function originIsAllowed(origin) {
    var objectsJSON = JSON.stringify(objects);
    console.log("Sending broadcast to " + clients.length + " clients.");
    clients.forEach(function(client) {
-     console.log("Sent update");
-     client.sendUTF(objectsJSON);
+     if (client !== wsServer && client.readyState === WebSocket.OPEN) {
+        console.log("Sent update");
+        client.send(objectsJSON);
+      }
    });
   }
 wsServer.on('request', function(request) {
@@ -115,6 +117,7 @@ message.binaryData.length + ' bytes');
    connection.on('close', function(reasonCode, description) {
        console.log((new Date()) + ' Peer ' + connection.remoteAddress +
        ' disconnected.');
+       clients.splice(clients.indexOf(connection), 1);
    });
 
  //trying start connection identifier thingy
