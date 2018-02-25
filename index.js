@@ -8,8 +8,8 @@ var players = {};
 players['player1'] = {};
 players['player2'] = {};
 
-objects.append(['player 1', 0.0, 0.0, 20, .5, 1, 2, 2.0, 1]);
-var objectsJSON = JSON.stringify(objects);
+objects.push['player 1', 0.0, 0.0, 20, .5, 1, 2, 2.0, 1]);
+var objectsJSON = JSON.stringify(objects[]);
 console.log(objectsJSON)
 
 
