@@ -72,6 +72,7 @@ function originIsAllowed(origin) {
  function sendUpdates(){
    var objectsJSON = JSON.stringify(objects);
    clients.forEach(function(client) {
+     console.log("Sent update");
      client.send(objectsJSON);
    });
   }
@@ -98,6 +99,9 @@ request.origin + ' rejected.');
        if (message.type === 'utf8') {
            console.log('Received Message: ' + message.utf8Data);
            connection.sendUTF(message.utf8Data);
+           var data = JSON.parse(message);
+           player_names[playerNum] = data['userName'];
+           gameStart();
        }
 
 
