@@ -67,7 +67,17 @@ function originIsAllowed(origin) {
  // put logic here to detect whether the specified origin is allowed.
  return true;
 }
-
+//sends the updates of every tick to the client as a json file
+ function sendUpdates(){
+   var objectsJSON = JSON.stringify(objects);
+   wsServer.broadcast = function broadcast(objectsJSON) {
+      wsServer.clients.forEach(function each(client) {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(objectsJSON);
+        }
+      });
+    };
+  }
 wsServer.on('request', function(request) {
    if (!originIsAllowed(request.origin)) {
      // Make sure we only accept requests from an allowed origin
@@ -283,15 +293,3 @@ message.binaryData.length + ' bytes');
        objects.splice(cmd[1], 1);
      }
    }
-
-//sends the updates of every tick to the client as a json file
- function sendUpdates(){
-   var objectsJSON = JSON.stringify(objects);
-   wsServer.broadcast = function broadcast(objectsJSON) {
-      wsServer.clients.forEach(function each(client) {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(objectsJSON);
-        }
-      });
-    };
-  }
