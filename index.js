@@ -72,8 +72,8 @@ function originIsAllowed(origin) {
  function sendUpdates(){
    var objectsJSON = JSON.stringify(objects);
    clients.forEach(function(client) {
-     client.send(objectsJSON)
-   }
+     client.send(objectsJSON);
+   });
   }
 wsServer.on('request', function(request) {
    if (!originIsAllowed(request.origin)) {
