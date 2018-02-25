@@ -1,62 +1,53 @@
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var player_names = [];
-var players = {};
-players['player1'] = {};
-players['player2'] = {};
+var WebSocketServer = require(‘websocket’).server; var http = require(‘http’);
 
-app.get('/', function(req, res){
-res.sendFile(__dirname + '/index.html');
+var server = http.createServer(function(request, response) {
+   console.log((new Date()) + ' Received request for ' + request.url);
+   response.writeHead(404);
+   response.end();
+});
+server.listen(8080, function() {
+   console.log((new Date()) + ' Server is listening on port 8080');
 });
 
-
-io.on('connection', function(socket){
-  //gets the users address from when connected and sets their IDs
-  if (players['player1'] === {}){
-    players['player1']['id'] = socket.handshake.query.name
-    console.log(players['player1']['id'])
-  }
-    else if (players['player2'] === {}){
-    players['player2']['id'] = socket.handshake.query.name
-  }
-    else {
-      io.emit('chat message', 'error: two players have already entered')
-    }
-    //sends "user connected" to page
-    io.emit('chat message', 'a user has connected')
-    //sends "user connected" to console
-    console.log('a user connected');
-    //when a message is sent
-    socket.on('chat message',function(msg){
-      //sends message to page
-      io.emit('chat message', msg);
-      //sends message to conosole
-      console.log('message: ' + msg);
-    });
-    socket.on('ready',function(name){
-      //gets the users names that they input when they click ready
-    	console.log(name);
-      if (players['player1'] === {}){
-        players['player1']['name'] = name.handshake.query.names
-      }
-      else if (players['player2']['name'] === {}){
-        players['player2']['name'] = name.handshake.query.names
-      }
-      else{
-        io.emit('chat message', 'error: two players have already entered')
-      }
-
-	//player_names.append(name);
-	//console.log(player_names);
-    });
-    socket.on('disconnect', function(){
-      io.emit('chat message', 'a user has disconnected')
-      //sends disconnect message to console
-      console.log('user disconnected');
-    });
+wsServer = new WebSocketServer({
+   httpServer: server,
+   // You should not use autoAcceptConnections for production
+   // applications, as it defeats all standard cross-origin protection
+   // facilities built into the protocol and the browser.  You should
+   // *always* verify the connection’s origin and decide whether or not
+   // to accept it.
+   autoAcceptConnections: false
 });
-//listens on the port heroku sets or 3000
-http.listen((process.env.PORT||3000), function(){
-  console.log('listening on *:3000');
+
+function originIsAllowed(origin) {
+ // put logic here to detect whether the specified origin is allowed.
+ return true;
+}
+
+wsServer.on(‘request’, function(request) {
+   if (!originIsAllowed(request.origin)) {
+     // Make sure we only accept requests from an allowed origin
+     request.reject();
+     console.log((new Date()) + ' Connection from origin ' +
+request.origin + ' rejected.');
+     return;
+   }
+
+   var connection = request.accept(“sabre”, request.origin);
+   console.log((new Date()) + ’ Connection accepted.’);
+   connection.on(‘message’, function(message) {
+       if (message.type === ‘utf8’) {
+           console.log(‘Received Message: ’ + message.utf8Data);
+           connection.sendUTF(message.utf8Data);
+       }
+       else if (message.type === ‘binary’) {
+           console.log(‘Received Binary Message of ’ +
+message.binaryData.length + ' bytes');
+           connection.sendBytes(message.binaryData);
+       }
+   });
+   connection.on(‘close’, function(reasonCode, description) {
+       console.log((new Date()) + ' Peer ' + connection.remoteAddress +
+       ' disconnected.');
+   });
 });
