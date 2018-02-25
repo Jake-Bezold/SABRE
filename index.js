@@ -120,7 +120,6 @@ message.binaryData.length + ' bytes');
   wsServer.on('newPlayer', function(name){
     console.log('Player name: ' + name);
     player_names[playerNum] = name;
-    gameStart();
   });
   wsServer.on('latlong', function(strcoords){
     var coords = JSON.parse(strcoords);
@@ -154,17 +153,14 @@ message.binaryData.length + ' bytes');
      objects.push(['capture 3', -10.0, 75.0, 20, .5, 1, 2, 2.0, 1]);
      objects.push(['capture 4', 10.0, 75.0, 20, .5, 1, 2, 2.0, 1]);
 
-     setInterval(gameLoop(), 500);
+     setInterval(gameLoop(), 1000);
 
    }
 
 //runs continously to run ticks and send updates of all the units
 //back to the client
    function gameLoop() {
-     while(true){
-       //tick();
        sendUpdates();
-     }
    }
 
 //ticks contiously and executes commands when needed
