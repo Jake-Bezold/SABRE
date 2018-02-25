@@ -101,10 +101,7 @@ request.origin + ' rejected.');
    connection.on('message', function(message) {
        if (message.type === 'utf8') {
            console.log('Received Message: ' + message.utf8Data);
-           console.log('Message Type: ' + typeof(message));
-           var stringData = String(message);
-           var data = JSON.parse(stringData);
-           player_names[playerNum] = data["userName"];
+           player_names[playerNum] = data.userName;
            console.log("userName: " + player_names[playerNum])
            gameStart();
        }
