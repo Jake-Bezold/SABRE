@@ -12,16 +12,16 @@ var scaleLongm = .00000899;
 var scaleMU = 2.5;
 
 //////////////
-//objects.push(['player 1', 0.0, 0.0, 20, .5, 1, 2, 2.0, 1]);
-//objects.push(['player 2', 4.0, 4.0, 20, .5, 1, 2, 2.0, 2]);
-//commands.push(["move", 0, 10, [0,0], [4,4], true]);
-//commands.push([null]);
-//for (testiter = 0; testiter <= 20; testiter++){
-//  var objectsJSON = JSON.stringify(objects);
-//  console.log(testiter + ": " + objectsJSON);
-//  console.log("commands: " + commands);
-//  tick();
-//}
+objects.push(['player 1', 0.0, 0.0, 20, .5, 1, 2, 2.0, 1]);
+objects.push(['player 2', 4.0, 4.0, 20, .5, 1, 2, 2.0, 2]);
+commands.push(["move", 0, 10, [0,0], [4,4], true]);
+commands.push([null]);
+for (testiter = 0; testiter <= 20; testiter++){
+  var objectsJSON = JSON.stringify(objects);
+  console.log(testiter + ": " + objectsJSON);
+  console.log("commands: " + commands);
+  tick();
+}
 
 //player_names.push('player1');
 //player_names.push('player2');
