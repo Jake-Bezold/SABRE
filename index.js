@@ -4,21 +4,43 @@ var WebSocketServer = require('websocket').server; var http = require('http');
 var objects = [];
 var commands = [];
 var player_names = [];
-var players = {};
-players['player1'] = {};
-players['player2'] = {};
+var player_pos_gps = [];
+var player_pos_game = [];
+var scaleLatm = .0000139479;
+var scaleLongm = .00000899;
+var scaleMU = 2.5;
 
-objects.push(['player 1', 0.0, 0.0, 20, .5, 1, 2, 2.0, 1]);
-objects.push(['player 2', 4.0, 4.0, 20, .5, 1, 2, 2.0, 2]);
-commands.push(["move", 0, 10, [0,0], [4,4], true]);
-commands.push([null]);
-for (testiter = 0; testiter <= 20; testiter++){
-  var objectsJSON = JSON.stringify(objects);
-  console.log(testiter + ": " + objectsJSON);
-  console.log("commands: " + commands);
-  tick();
-}
+//////////////
+//objects.push(['player 1', 0.0, 0.0, 20, .5, 1, 2, 2.0, 1]);
+//objects.push(['player 2', 4.0, 4.0, 20, .5, 1, 2, 2.0, 2]);
+//commands.push(["move", 0, 10, [0,0], [4,4], true]);
+//commands.push([null]);
+//for (testiter = 0; testiter <= 20; testiter++){
+//  var objectsJSON = JSON.stringify(objects);
+//  console.log(testiter + ": " + objectsJSON);
+//  console.log("commands: " + commands);
+//  tick();
+//}
 
+player_names.push('player1');
+player_names.push('player2');
+player_pos_gps.push([40.2721204424553, -74.7773093646938]);
+player_pos_game.push([0.0, 75.0]);
+//player_pos.push([40.2731204424553, -74.7763093646938]);
+playerNum = 0;
+coords = [40.2722204424553, -74.7772093646938];
+
+player_pos_game[playerNum][1] = ((coords[1] - player_pos_gps[playerNum][1]) / scaleLongm / scaleMU) + player_pos_game[playerNum][1];
+player_pos_game[playerNum][0] = ((coords[0] - player_pos_gps[playerNum][0]) / scaleLatm / scaleMU) + player_pos_game[playerNum][0];
+player_pos_gps[playerNum][1] = coords[1];
+player_pos_gps[playerNum][0] = coords[0];
+
+console.log(player_pos_gps[playerNum]);
+console.log(player_pos_game[playerNum]);
+
+gameStart();
+
+////////////////
 
 
 
@@ -57,6 +79,13 @@ request.origin + ' rejected.');
 
    var connection = request.accept("sabre", request.origin);
    console.log((new Date()) + ' Connection accepted.');
+   var playerNum = player_names.length;
+   player_names.push("");
+   player_pos_gps.push([]);
+   player_pos_game.push([]);
+
+
+
    connection.on('message', function(message) {
        if (message.type === 'utf8') {
            console.log('Received Message: ' + message.utf8Data);
@@ -76,23 +105,52 @@ message.binaryData.length + ' bytes');
    });
 
  //trying start connection identifier thingy
- //    wsServer.on('newPlayer', function(name){
- //      console.log('Player name: ' + name)
- //    })
+  wsServer.on('newPlayer', function(name){
+    console.log('Player name: ' + name);
+    player_names[playerNum] = name;
+    gameStart();
+  });
+  wsServer.on('latlong', function(strcoords){
+    var coords = JSON.parse(strcoords);
+    if (player_pos_gps[playerNum] != null){
+    player_pos_game[playerNum][1] = ((coords[1] - player_pos_gps[playerNum][1]) / scaleLongm / scaleMU) + player_pos_game[playerNum][1];
+    player_pos_game[playerNum][0] = ((coords[0] - player_pos_gps[playerNum][0]) / scaleLatm / scaleMU) + player_pos_game[playerNum][0];
+  }
+    player_pos_gps[playerNum][1] = coords[1];
+    player_pos_gps[playerNum][0] = coords[0];
+    console.log(player_pos_gps[playerNum]);
+    console.log(player_pos_game[playerNum]);
+
+  });
  ////end that thingy
    });
-//not sure if this is right
-// wsServer.on('move', function(details){
-//    console.log('details: ' + details)
-//input details into command array here (thats the goal)
-//  });
 });
+   function gameStart() {
+     // Calculate distance between both players
+
+     // Create player game objects
+
+     //(player_pos[0][0] * scaleLatm * scaleMU), (player_pos[0][1] * scaleLongm * scaleMU),
+     //(player_pos[1][0] * scaleLatm * scaleMU), (player_pos[1][1] * scaleLongm * scaleMU)
+     objects.push(['player 1', 0.0, -75.0, 20, .5, 1, 2, 2.0, 1]);
+     objects.push(['player 2', 0.0, 75.0, 20, .5, 1, 2, 2.0, 1]);
+     //console.log(objects);
+     //console.log(scale);
+     // Create capture point game objects
+     objects.push(['capture 1', -10.0, -75.0, 20, .5, 1, 2, 2.0, 1]);
+     objects.push(['capture 2', 10.0, -75.0, 20, .5, 1, 2, 2.0, 1]);
+     objects.push(['capture 3', -10.0, 75.0, 20, .5, 1, 2, 2.0, 1]);
+     objects.push(['capture 4', 10.0, 75.0, 20, .5, 1, 2, 2.0, 1]);
+
+     setInterval(gameLoop(), 500);
+
+   }
 
 //runs continously to run ticks and send updates of all the units
 //back to the client
    function gameLoop() {
      while(true){
-       tick();
+       //tick();
        sendUpdates();
      }
    }
