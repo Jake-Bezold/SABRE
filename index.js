@@ -1,6 +1,7 @@
 var WebSocketServer = require('websocket').server; var http = require('http');
 
 //initializing global variables
+var clients = [];
 var objects = [];
 var commands = [];
 var player_names = [];
@@ -22,23 +23,23 @@ var scaleMU = 2.5;
 //  tick();
 //}
 
-player_names.push('player1');
-player_names.push('player2');
-player_pos_gps.push([40.2721204424553, -74.7773093646938]);
-player_pos_game.push([0.0, 75.0]);
+//player_names.push('player1');
+//player_names.push('player2');
+//player_pos_gps.push([40.2721204424553, -74.7773093646938]);
+//player_pos_game.push([0.0, 75.0]);
 //player_pos.push([40.2731204424553, -74.7763093646938]);
-playerNum = 0;
-coords = [40.2722204424553, -74.7772093646938];
+//playerNum = 0;
+//coords = [40.2722204424553, -74.7772093646938];
 
-player_pos_game[playerNum][1] = ((coords[1] - player_pos_gps[playerNum][1]) / scaleLongm / scaleMU) + player_pos_game[playerNum][1];
-player_pos_game[playerNum][0] = ((coords[0] - player_pos_gps[playerNum][0]) / scaleLatm / scaleMU) + player_pos_game[playerNum][0];
-player_pos_gps[playerNum][1] = coords[1];
-player_pos_gps[playerNum][0] = coords[0];
+//player_pos_game[playerNum][1] = ((coords[1] - player_pos_gps[playerNum][1]) / scaleLongm / scaleMU) + player_pos_game[playerNum][1];
+//player_pos_game[playerNum][0] = ((coords[0] - player_pos_gps[playerNum][0]) / scaleLatm / scaleMU) + player_pos_game[playerNum][0];
+//player_pos_gps[playerNum][1] = coords[1];
+//player_pos_gps[playerNum][0] = coords[0];
 
-console.log(player_pos_gps[playerNum]);
-console.log(player_pos_game[playerNum]);
+//console.log(player_pos_gps[playerNum]);
+//console.log(player_pos_game[playerNum]);
 
-gameStart();
+//gameStart();
 
 ////////////////
 
@@ -53,7 +54,7 @@ server.listen(process.env.PORT, function() {
    console.log((new Date()) + ' Server is listening on port ' + process.env.PORT);
 });
 
-var wsServer = new WebSocketServer({
+wsServer = new WebSocketServer({
    httpServer: server,
    // You should not use autoAcceptConnections for production
    // applications, as it defeats all standard cross-origin protection
@@ -70,13 +71,9 @@ function originIsAllowed(origin) {
 //sends the updates of every tick to the client as a json file
  function sendUpdates(){
    var objectsJSON = JSON.stringify(objects);
-   wsServer.broadcast = function broadcast(objectsJSON) {
-      wsServer.clients.forEach(function each(client) {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(objectsJSON);
-        }
-      });
-    };
+   clients.forEach(function(client) {
+     client.send(objectsJSON)
+   }
   }
 wsServer.on('request', function(request) {
    if (!originIsAllowed(request.origin)) {
@@ -88,6 +85,7 @@ request.origin + ' rejected.');
    }
 
    var connection = request.accept("sabre", request.origin);
+   clients.push(connection);
    console.log((new Date()) + ' Connection accepted.');
    var playerNum = player_names.length;
    player_names.push("");
