@@ -153,7 +153,7 @@ message.binaryData.length + ' bytes');
      objects.push(['capture 3', -10.0, 75.0, 20, .5, 1, 2, 2.0, 1]);
      objects.push(['capture 4', 10.0, 75.0, 20, .5, 1, 2, 2.0, 1]);
 
-     setInterval(gameLoop(), 1000);
+     setInterval(function () {sendUpdates()}, 1000);
 
    }
 
