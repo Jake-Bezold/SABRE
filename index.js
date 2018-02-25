@@ -53,7 +53,7 @@ server.listen(process.env.PORT, function() {
    console.log((new Date()) + ' Server is listening on port ' + process.env.PORT);
 });
 
-wsServer = new WebSocketServer({
+var wsServer = new WebSocketServer({
    httpServer: server,
    // You should not use autoAcceptConnections for production
    // applications, as it defeats all standard cross-origin protection
