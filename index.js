@@ -105,8 +105,9 @@ request.origin + ' rejected.');
 
 
    connection.on('message', function(message) {
-     console.log('recieved Message: ' + Object.values(message))
+     console.log('recieved Message: ' + message)
        if (message.type === 'utf8') {
+         console.log(">>>> " + message.value)
            //console.log('Received Message2: ' + message);
            //console.log('type of: ' + typeof(message));
            var data = JSON.parse(Object.values(message).substring(5));
