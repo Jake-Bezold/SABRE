@@ -12,7 +12,7 @@ res.sendFile(__dirname + '/index.html');
 
 
 io.on('connection', function(socket){
-  //gets the users address from when connected
+  //gets the users address from when connected and sets their IDs
   if (players['player1'] === {}){
     players['player1']['id'] = socket.handshake.query.name
     console.log(players['player1']['id'])
@@ -35,6 +35,7 @@ io.on('connection', function(socket){
       console.log('message: ' + msg);
     });
     socket.on('ready',function(name){
+      //gets the users names that they input when they click ready
     	console.log(name);
       if (players['player1'] === {}){
         players['player1']['name'] = name.handshake.query.names
