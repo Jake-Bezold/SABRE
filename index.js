@@ -1,4 +1,4 @@
-var WebSocketServer = require(‘websocket’).server; var http = require(‘http’);
+var WebSocketServer = require('websocket').server; var http = require('http');
 
 var server = http.createServer(function(request, response) {
    console.log((new Date()) + ' Received request for ' + request.url);
@@ -24,7 +24,7 @@ function originIsAllowed(origin) {
  return true;
 }
 
-wsServer.on(‘request’, function(request) {
+wsServer.on('request', function(request) {
    if (!originIsAllowed(request.origin)) {
      // Make sure we only accept requests from an allowed origin
      request.reject();
@@ -33,20 +33,20 @@ request.origin + ' rejected.');
      return;
    }
 
-   var connection = request.accept(“sabre”, request.origin);
-   console.log((new Date()) + ’ Connection accepted.’);
-   connection.on(‘message’, function(message) {
-       if (message.type === ‘utf8’) {
-           console.log(‘Received Message: ’ + message.utf8Data);
+   var connection = request.accept("sabre", request.origin);
+   console.log((new Date()) + ' Connection accepted.');
+   connection.on('message', function(message) {
+       if (message.type === 'utf8') {
+           console.log('Received Message: ' + message.utf8Data);
            connection.sendUTF(message.utf8Data);
        }
-       else if (message.type === ‘binary’) {
-           console.log(‘Received Binary Message of ’ +
+       else if (message.type === 'binary') {
+           console.log('Received Binary Message of ' +
 message.binaryData.length + ' bytes');
            connection.sendBytes(message.binaryData);
        }
    });
-   connection.on(‘close’, function(reasonCode, description) {
+   connection.on('close', function(reasonCode, description) {
        console.log((new Date()) + ' Peer ' + connection.remoteAddress +
        ' disconnected.');
    });
