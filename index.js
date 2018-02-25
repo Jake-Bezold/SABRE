@@ -104,6 +104,7 @@ request.origin + ' rejected.');
            connection.sendUTF(message.utf8Data);
            var data = message;
            player_names[playerNum] = data['userName'];
+           console.log("userName: " + player_names[playerNum])
            gameStart();
        }
 
