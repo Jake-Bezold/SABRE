@@ -287,8 +287,8 @@ message.binaryData.length + ' bytes');
 //sends the updates of every tick to the client as a json file
  function sendUpdates(){
    var objectsJSON = JSON.stringify(objects);
-   ws.broadcast = function broadcast(objectsJSON) {
-      ws.clients.forEach(function each(client) {
+   wsServer.broadcast = function broadcast(objectsJSON) {
+      wsServer.clients.forEach(function each(client) {
         if (client.readyState === WebSocket.OPEN) {
           client.send(objectsJSON);
         }
