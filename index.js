@@ -55,24 +55,30 @@ request.origin + ' rejected.');
            connection.sendUTF(message.utf8Data);
        }
 
-//trying start connection identifier thingy
-    wsServer.on('newPlayer', function(name)){
-      console.log('Player name: ' + name)
-    }
-////end that thingy
+
 
        else if (message.type === 'binary') {
            console.log('Received Binary Message of ' +
 message.binaryData.length + ' bytes');
            connection.sendBytes(message.binaryData);
        }
+   connection.on('close', function(reasonCode, description) {
+       console.log((new Date()) + ' Peer ' + connection.remoteAddress +
+       ' disconnected.');
+   });
+
+ //trying start connection identifier thingy
+ //    wsServer.on('newPlayer', function(name){
+ //      console.log('Player name: ' + name)
+ //    })
+ ////end that thingy
    });
 //not sure if this is right
- wsServer.on('move', function(details)){
-    console.log('details: ' + details)
+// wsServer.on('move', function(details){
+//    console.log('details: ' + details)
 //input details into command array here (thats the goal)
-   }
- }
+//  });
+});
 
 //runs continously to run ticks and send updates of all the units
 //back to the client
@@ -85,7 +91,7 @@ message.binaryData.length + ' bytes');
 
 //ticks contiously and executes commands when needed
    function tick(commands) {
-     for (i = 0 , i < commands.length, i++){
+     for (i = 0 ; i < commands.length; i++){
        if (commands[i] != nil) {
          execute(commands[i])
        }
@@ -103,42 +109,42 @@ message.binaryData.length + ' bytes');
 
 //move function moves units the units to the "to" and if encounters enemy units
 //calls the battle function
-   function move(cmd) {}
-     if (cmd[5] == true {
-       var cur_obj = objects[cmd[1];
+   function move(cmd){
+     if (cmd[5] == true){
+       var cur_obj = objects[cmd[1]];
        objects.append(cur_obj);
        objects[-1][3] = cmd[2];
        cur_obj[3] -= cmd[2];
      }
-     if (xi < xf) {
+     if (xi <= xf) {
        if ((xi + ms) > xf) {
          xi = xf;
        } else {
          xi += ms;
        }
      }
-     if (xi > xf) {
+     if (xi >= xf) {
        if ((xi - ms) < xf) {
          xi = xf;
        } else {
          xi -= ms;
        }
      }
-     if (yi < yf) {
+     if (yi <= yf) {
        if ((yi + ms) > yf) {
          yi = yf;
        } else {
          yi += ms;
        }
      }
-     if (yi > yf) {
+     if (yi >= yf) {
        if ((yi - ms) < yf) {
          yi = yf;
        } else {
          yi -= ms;
        }
      }
-     for(i=0; i < objects.len; i++) {
+     for(i=0; i < objects.length; i++) {
        if((objects[i][1] - xi < dist) && (objects[i][2] - yi < dist)) {
          if(objects[i][8] != curr_obj[8]) {
           commands[cmd[1]] = ["battle", cmd[1], objects.indexOf(objects[i][1])];
@@ -167,19 +173,13 @@ message.binaryData.length + ' bytes');
    }
 
 //sends the updates of every tick to the client as a json file
-   function sendUpdates(){
-     var objectsJSON = JSON.stringify(objects[]);
-     ws.broadcast = function broadcast(objectsJSON) {
-        ws.clients.forEach(function each(client) {
-          if (client.readyState === WebSocket.OPEN) {
-            client.send(objectsJSON);
-          }
-        });
-      };
-    }
-
-   connection.on('close', function(reasonCode, description) {
-       console.log((new Date()) + ' Peer ' + connection.remoteAddress +
-       ' disconnected.');
-   });
-});
+ function sendUpdates(){
+   var objectsJSON = JSON.stringify(objects);
+   ws.broadcast = function broadcast(objectsJSON) {
+      ws.clients.forEach(function each(client) {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(objectsJSON);
+        }
+      });
+    };
+  }
